@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <script src="https://distill.pub/template.v1.js"></script>
+    <title></title>
+
+    <style type="text/css">
+    /* switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    /* div */
+    .wrapper{
+      display: flex;
+      /*background-color: green;*/
+    }
+    .wrapper > div{
+      flex: 1;
+    }
+    .submenu{
+      display: inline-block;
+      width:30%;
+    }
+    .submenu > div{
+      padding: 10px;
+    }
+    .inline-block_test {    /* インラインブロック要素にする */
+        background-color:  #ccc;    /* 背景色指定 */
+    }
+    .column_type{
+      display: flex;
+      background-color: #ddd;
+    }
+
+    /*:*/
+    .red{
+      background-color: red;
+    }
+    .orange{
+      background-color: orange;
+    }
+    .blue{
+      background-color: blue;
+    }
+    .gray{
+      background-color: #ddd;
+    }
+  </style>
+
+  </head>
+
+  <script type="text/front-matter">
+    title: "Article Title"
+    description: "Description of the post"
+    authors:
+    - Katsuhiro Endo: https://scholar.google.com/citations?user=y8WmUcgAAAAJ
+    - Kenji Yasuoka: https://scholar.google.com/citations?user=qoRtapYAAAAJ
+    affiliations:
+    - Keio University: https://www.keio.ac.jp/ja/
+    - Keio University: https://www.keio.ac.jp/ja/
+  </script>
+
+  <dt-article>
+    <h1>Neural Cellular Maze Solver</h1>
+    <h2>A description of the article</h2>
+    <dt-byline></dt-byline>
+
+    <div class="l-middle orange" style="display:flex;">
+
+      <div id="svg" class="gray" style="display: inline-block;width:70%;"></div>
+
+      <div class="submenu gray">
+        <div class="column_type">
+          <div style="width: 70%"><p style="margin: 0;">Pause/Play</p></div>
+          <div style="position: relative;"><label class="switch" style="position: absolute; top:50%; transform: translateY(-50%);">
+            <input type="checkbox" id="editmode">
+            <span class="slider"></span>
+          </label></div>
+        </div>
+        <div class="column_type">
+          <div style="width: 70%"><p style="margin: 0;">Block select</div>
+          <select size="3" id="blocktype" >
+            <option value="wall" selected>Wall</option>
+            <option value="road">Road</option>
+            <option value="endpoint">Endpoint</option>
+          </select>
+        </div>
+        <div class="column_type">
+          <div style="width: 50%"><p style="margin: 0;">Visual layer</p></div>
+          <select size="16" id="visual_layer" style="width: 50%">
+            <option value="0" selected><p>Maze Input</p></option>
+            <option value="1" >Maze Output</option>
+            <option value="2" >Hidden layer 1</option>
+            <option value="3" >Hidden layer 2</option>
+            <option value="4" >Hidden layer 3</option>
+            <option value="5" >Hidden layer 4</option>
+            <option value="6" >Hidden layer 5</option>
+            <option value="7" >Hidden layer 6</option>
+            <option value="8" >Hidden layer 7</option>
+            <option value="9" >Hidden layer 8</option>
+            <option value="10" >Hidden layer 9</option>
+            <option value="11" >Hidden layer 10</option>
+            <option value="12" >Hidden layer 11</option>
+            <option value="13" >Hidden layer 12</option>
+            <option value="14" >Hidden layer 13</option>
+            <option value="15" >Hidden layer 14</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!--
+    <button type="button" id="download">generate svg download url</button>
+    <button type="button" id="reset">reset state</button>
+    <button type="button" id="nextstep">next state</button>
+    <button type="button" id="toggle_circles">toggle draw circles</button>
+    <button type="button" id="toggle_binary">toggle binary draw</button>
+    <button type="button" id="rep_download">genrate rep download</button>
+    <button type="button" id="random_reload">random reload</button>
+    <div id="div_download"></div> -->
+
+    <div class="l-middle">
+      <p style=" text-align:center;">Interactive demonstration of Neural Cellular Maze Solver. This cellular automaton are trained to output shortest path between the two endpoints. You can interactively edit the maze input by clicking or tapping with selected maze cell types (Wall, Road, Endpoint).
+        The state of each cell is stochastically updated depending on the state of each cell and the four-surrounding cells. </p>
+    </div>
+
+    <dt-byline></dt-byline>
+
+    <!--p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p-->
+
+    <p>Swarm intelligence is a system in which each of its components only has a simple function and these components interact only with their surroundings to produce complex results that are unimaginable from their individual functions.
+    For example, in the study of mouldy computers<dt-cite key="tero2010rules"></dt-cite>, they found that slime mold solves the shortest path problem. When we place slime in the maze and feed on endpoints of the maze, only slime mold on the shortest path remains. Although each slime mold cell is not intelligent enough to calculate the shortest path, slime mold emergently solves shortest path problem through the interaction between the cells and the environment.
+    Like this example, agents with simple functions have emergent functions as a group through interaction.
+    So we can consider to create artificial swarm intelligence to solve other problems. Boid<dt-cite key="reynolds1987flocks"></dt-cite> is famous for the first artificial swarm intelligence to simulate a flock of birds. Emergent results are observed that cannot be discovered by only knowing how the agents interact with each other.  Therefore, it is a challenge to design the functionality of agents to achieve the desired result.</p>
+
+    <p>Growing Neural Cellular Automata<dt-cite key="mordvintsev2020growing"></dt-cite> showed that cellular automata based on simple rules can self-organize a variety of desired complex structures. In this model, the next state of a cell is determined only from the state of the surrounding cells, and the same rules are used for all cells. Since the cell update rules are differentiable, the process of self-organization can be optimized by end-to-end learning. In the Self-classifying MNIST Digits article<dt-cite key="randazzo2020self-classifying"></dt-cite>, they showed that cellular automata are capable of recognizing numerical images. They assign each pixel as each cell on the grid and determine what numbers are written on the pixel as a whole. In this case, cells can only obtain information directly from neighboring pixels, so it is necessary to obtain information by recursive interactions between cells to get the overall picture. In other words, they showed that the model is possible to learn how to integrate information on a global scale based only on local interaction.</p>
+
+    <p>These results are interesting from the point of view of how we should construct swarm intelligence from the results we want to obtain. Therefore, we are interested in what other tasks this differentiable cellular automaton can perform.
+    In this paper, we challenged the maze solver task, which the cells find the shortest path between two given points, like mouldy computer.</p>
+
+    <h2> The maze solver task </h2>
+    <p>A maze is defined as a grid of squares, each of which has one of three states: wall, road, or endpoint. The endpoints are at most two points in the maze. With the maze as an input, we move from one end point to the other end point by one square (up, down, left, right), passing only the roads.
+    We define the shortest path as the path that passes through the maze with the minimum amount of movement, and call it the solution of the maze.
+    In order for the Neural Cellular Automata to perform the task of solving a maze, we take the maze as input and output the solution of the maze. Each cell is responsible for each square in the maze and receives the state of the square as input.
+    Then, through the interaction with neighboring cells, it determines whether its own cell is the shortest path or not.  In general, it is not possible to determine the shortest path only from the states of a cell itself and the surrounding cells, so this maze solver task requires the integration of global information.</p>
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <img src="d002.svg" alt="" width="45%">
+      <!--div style="display: inline-block; background-color: blue; width:17%;" >a</div-->
+      <img src="d001.svg" alt="" width="45%">
+    </div>
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <div style="display: inline-block; width:45%;" ><p alt="" style="margin: 10px auto; text-align:center;">A maze input.<br> Wall(yellow)=+1, Road(green)=0 and Endpoint(blue)=-1. </p></div>
+      <div style="display: inline-block; width:45%;" ><p alt=""style="margin: 10px auto; text-align:center;">A solution of the left maze (maze output).<br> Roads on shortest path=+1 and the others=-1. </p></div>
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">A sample pair of the Maze DataSet. </p>
+    </div>
+    <!-- probablistic ... -->
+
+    <h2> Maze Dataset </h2>
+
+    <p>For the maze solver task, we first prepare pairs of maze input and its solution  for training dataset. In this study, we created a random maze by the method called "wall-stretching method", and maze post-processing were applied to make more diverse maze. The method stretch the walls of a maze without creating a dividing path. Since the maze created by this method does not have any path fragmentation or loops, we generate randomly located walls and roads as a post-processing in order to create more diversity in the maze dataset. The following movies shows the process of creating mazes. </p>
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <video src="movie_genmaze/img0.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img1.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img2.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img3.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img4.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+    </div>
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <video src="movie_genmaze/img5.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img6.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img7.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img8.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+      <video src="movie_genmaze/img9.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">The process of createing mazes.</p>
+    </div>
+
+    <div class="l-page side" style="padding:10px 10px;">
+      <div style="display: flex; justify-content: space-between; width:100%;">
+      <video src="movie_genmaze/imgX.mp4" autoplay muted loop style="display: inline-block; width:100%;" ></video>
+      </div>
+      <div style="display: block; width:100%;" ><p alt="" style="margin: 10px 10px; text-align:center;">
+      <p>(Left) Generated maze as input. (Right) The solution of the left maze. </p></div>
+    </div>
+
+    <p>After generating maze, we set two endpoint on the maze and solve the maze as output. We use scipy csgraph library to create shortest path solution of the mazes. If there are multiple shortest paths, we prioritize to go through the lower part of the maze as possible to ensure the deterministic behavior of a maze solution. If there is no shortest path connecting two end points, then only the end points are defined as the roads on the shortest path. This movie shows final result of the maze dataset. </p>
+
+    <h2> Model </h2>
+
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <img src="mat1.svg" alt="" width="100%">
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">A single update step of the model.</p>
+    </div>
+
+
+
+    <h3>Cell State</h3>
+    <p>The model used in this article is a simplified version of the model used in Growing Neural Cellular Automata. Each cell consists of 16 real channels. The first of the 16 channels is used to input the state of the maze.  The wall is +1, the road is 0, and the end point is -1.
+    The second channel is used to output the solution of the maze. The road on the shortest path is +1 and the other roads are -1, as a target value.
+    The other 14 channels are used as hidden variables.</p>
+
+    <h3>Cell Update</h3>
+    <p>The update of a cell is determined solely from the cell itself and from the state of its top, bottom, left and right cells. Specifically, we flatten the state of each cell (80 channels), take it as input and pass it through a 3-layer fully connected neural network to obtain the differential updates for 16 channels of cells and add them to the current state. The dimension of the hidden layer of the neural network is 64. Thus the number of parameters of the neural network is about 6.2k.
+    In order to include probabilistic behavior in the cell, the cell is updated with a half probability. Living cell masking in the context of Growing Neural Cellular Automata is not used.</p>
+
+    <h2> Experiment 1: state evolution and accuracy </h2>
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <img src="mat2.svg" alt="" width="100%">
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">The diagram of the training procedure.</p>
+    </div>
+
+    <h3> Training procedure </h3>
+    <p>We use our Neural Cellular Automata to learn how to solve mazes. We train the model with end-to-end learning by predicting the evolution of the model state over tens of update steps from the initial state and calculating the mean square error loss between the maze output (second channel) and the target label (maze solution). Randomly sampled "maze" and "solution of the maze" from the previously prepared Maze Dataset are assigned to the model's maze input and target label, respectively. To avoid the influence of the update to the maze input, we filled the maze data to the maze input  every step. Also, the mean square error between the maze output and the target label was added to the loss function every step. In this every step loss adding, we expect the output to be correct as quickly and permanently as possible.
+    Assuming that the maze input is suddenly changed, we copy the state of the last step of the previous mini-batch to the initial state of all channels except the maze input (first channel) of the current mini-batch.
+    This state copy techniques also has similar effect to the sample pool based strategy described in Growing Neural Cellular Automata.
+    For the same reason, in one mini-batch, the number of steps to predict is chosen from a uniform random number of steps between 1 and 128. In this way, we expect that the maze input is correctly predicted regardless of the change in the maze input at any time.</p>
+
+    <h3> Results </h3>
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <video src="img_m2.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+      <video src="img_m3.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+      <video src="img_m4.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">Evolution of Neural Cellular Maze Solver.</p>
+    </div>
+
+    <p>This is a video of our Neural Cellular Automata solving a maze.
+    Each square on the grid represents a maze input (the first channel) and has a wall or a path or an endpoint. Above the squares layer, we put the value of the maze output (the second channel) as the size of the radius of each circle. The roads are expected to be on the shortest path when the radius of the circle is maximum, and not on the shortest path when the radius of the circle is zero. Therefore, we can consider the size of the circle as an indicator of the confidence of the roads to be on the shortest path or not.
+
+    When we observe the development from the zero-filled initial state as the above movies, we can see that small maze outputs (small radius circles) appear everywhere on the roads in the early stage, and gradually the output of the maze on the roads not on the shortest path becomes smaller and the output of the maze on the roads on the shortest path becomes larger. The reason why a small maze output appears in the early stages is because we take the mean square loss between the solution of the maze and the output of the maze at every step during the training, so that the loss function would be smaller if the maze output take an intermediate value when the shortest path is not known. The maze output becomes larger when the cell found that the its own raod is on the shortest path through cell-to-cell interactions, and vice versa.</p>
+
+    <p>The following figure shows how the accuracy of the maze changes as the state evolves using test maze dataset.
+    The accuracy evaluation was performed as follows. First, a test set containing 1000 mazes was created separately from the training dataset. These all maze data are used as the initial state to evolve the state. The initial states are filled with zeros. We define "correct prediction" as the case where the placement of the cells whose maze output is greater than zero and the placement of the correct solution of the maze match exactly, and define other cases as "wrong prediction". We then define accuracy as the percentage of cases where the correct prediction is made out of all the prediction results.
+    From this figure, we can see that the maze is almost completely solved in about 100 steps. The accuracy is stable after 100 steps and is correct in more than 99% of cases. Our model avoids any broken of the maze output even in a large number of steps according to the state copy techniques. At less than 100 steps, the accuracy increases in proportion to the number of steps.</p>
+
+    <div class="l-body" style="display: flex; align-items: center; justify-content: center;">
+      <img src="acc1.svg" alt="" width="70%">
+    </div>
+    <div class="l-body">
+      <p style=" text-align:center;">Changes in Accuracy with Evolution steps.</p>
+    </div>
+
+
+    <h2> Experiment 2: change maze input during evolution </h2>
+
+    <p>In this experiment, we investigate the behavior of the maze when the maze is suddenly altered in the middle.
+    In the following movie, we changed some cells in maze input into a wall or a road after the state is sufficiently evolved. In these examples, we can see that the state evolves further and correctly solves the maze, even in response to sudden changes.</p>
+
+    <div class="l-middle" style="display: flex; justify-content: space-between;">
+      <video src="img_mr1.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+      <video src="img_mr2.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+      <video src="img_mr3.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+    </div>
+    <div class="l-middle">
+      <p style=" text-align:center;">Evolution with changing the maze input in the middle.</p>
+    </div>
+
+
+
+    <h3> Hysteresis effect on maze change </h3>
+
+    <p>Depending on the way of changing the maze input, the last step state before the change may influence the suceeding states and the wrong path may be selected as the maze output after the change. We call this effect as hysteresis effect, and the following movie shows a example of it. The left side of the movie has end points at the top and bottom, and there are two paths connecting the end points on the left and right. Since the left route is 25 squares away and the right route is 21 squares away, so the route on the right side is the shortest distance and our model actually chose it correctly.
+    Next, on the right side of the movie, we changed a little bit from the initial condition of the left movie to have a route of 17 squares on the left side and 21 squares on the right side in the initial condition. And our model correctly selects the left side. After the state is stabilized, we make a little modification to match the maze input on the left side of the movie. Since this operation yields 25 squares for the left route, the right route should be selected as the solution of the maze. However, depending on the previous state (hysteresis), the left route is selected as a result.</p>
+
+    <div class="l-middle" style="display: flex; justify-content: space-around;">
+      <video src="img_his1.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+      <video src="img_his2.mp4" autoplay muted loop style="display: inline-block; width:30%;" ></video>
+    </div>　
+    <div class="l-middle">
+      <p style=" text-align:center;">Evolutions are affected by the previous state.</p>
+    </div>
+
+    <h2> Discussion </h2>
+    <p>In this article, as a new example of artificial swarm intelligence, we show that the Neural Cellular Automata can solve the maze solver task almost perfectly. In the model used in this study, each cell changes its state depending on the state of the surrounding cells. It is not clear that the cells have a function to solve the maze from the state transition law of the cells, but the function to solve the maze emerges autonomously when the cells are arranged in a grid.</p>
+    <p>While the maze task can be solved rigorously by the Dijkstra method or the A-Star algorithm using a Neumann-type computer, such an emergent system with swarm intelligence is a non-Neumann-type computer that can find a reasonably better path quickly with minimal communication connections.
+    </p>
+    <p>In this article, we observed that the pathway between the endpoints was quickly reconstructed in response to changing circumstances, although it was not the exact shortest pathway as shown by the hysteresis in the Experiment 2.
+    Unlike algorithms such as Dijkstra's method, such a non-Neumann-type computer can flexibly change and adapt the transition law to its environment. For example, in our model, all cells were updated at a uniform rate of half a probability per step, but we can also consider a situation where the update probability of some cells is reduced due to various environmental factors. In such cases, if we train the Neural Cellular Automata to replicate its environment, the transition law will be trained to adapt to that environment.
+    With the development of the swarm intelligence field, it will be used in society as an environmentally stable and independent system in near future.</p>
+
+  </dt-article>
+  <dt-appendix>
+  </dt-appendix>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="downloader.js"></script>
+  <script src="rev5.h16n.model.js"></script>
+  <script src="maze_v3.s16.vis.js"></script>
+  <script src="script.js"></script>
+
+  <script type="text/bibliography">
+    @article{tero2010rules,
+      title={Rules for biologically inspired adaptive network design},
+      author={Tero, Atsushi and Takagi, Seiji and Saigusa, Tetsu and Ito, Kentaro and Bebber, Dan P and Fricker, Mark D and Yumiki, Kenji and Kobayashi, Ryo and Nakagaki, Toshiyuki},
+      journal={Science},
+      volume={327},
+      number={5964},
+      pages={439--442},
+      year={2010},
+      publisher={American Association for the Advancement of Science}
+    }
+    @inproceedings{reynolds1987flocks,
+      title={Flocks, herds and schools: A distributed behavioral model},
+      author={Reynolds, Craig W},
+      booktitle={Proceedings of the 14th annual conference on Computer graphics and interactive techniques},
+      pages={25--34},
+      year={1987}
+    }
+    @article{mordvintsev2020growing,
+      author = {Mordvintsev, Alexander and Randazzo, Ettore and Niklasson, Eyvind and Levin, Michael},
+      title = {Growing Neural Cellular Automata},
+      journal = {Distill},
+      year = {2020},
+      note = {https://distill.pub/2020/growing-ca},
+      doi = {10.23915/distill.00023}
+    }
+    @article{randazzo2020self-classifying,
+      author = {Randazzo, Ettore and Mordvintsev, Alexander and Niklasson, Eyvind and Levin, Michael and Greydanus, Sam},
+      title = {Self-classifying MNIST Digits},
+      journal = {Distill},
+      year = {2020},
+      note = {https://distill.pub/2020/selforg/mnist},
+      doi = {10.23915/distill.00027.002}
+    }
+
+
+    @article{gregor2015draw,
+      title={DRAW: A recurrent neural network for image generation},
+      author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
+      journal={arXivreprint arXiv:1502.04623},
+      year={2015},
+      url={https://arxiv.org/pdf/1502.04623.pdf}
+    }
+  </script>
+</html>
