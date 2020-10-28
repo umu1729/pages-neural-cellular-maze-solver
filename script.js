@@ -129,8 +129,8 @@ var drawAll = function(){
   }
 
 
-  var svgData = new XMLSerializer().serializeToString(svg.node());
-  rep.push(encodeURIComponent(svgData));
+  //var svgData = new XMLSerializer().serializeToString(svg.node());
+  //rep.push(encodeURIComponent(svgData));
 }
 
 

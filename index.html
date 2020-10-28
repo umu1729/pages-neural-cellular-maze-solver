@@ -178,8 +178,7 @@
     <div id="div_download"></div> -->
 
     <div class="l-middle">
-      <p style=" text-align:center;">Interactive demonstration of Neural Cellular Maze Solver. This cellular automaton are trained to output shortest path between the two endpoints. You can interactively edit the maze input by clicking or tapping with selected maze cell types (Wall, Road, Endpoint).
-        The state of each cell is stochastically updated depending on the state of each cell and the four-surrounding cells. </p>
+      <p style=" text-align:center;">Interactive demonstration of Neural Cellular Maze Solver. This cellular automaton is trained to output the shortest path between the two endpoints. You can interactively edit the maze input by clicking or tapping with selected maze cell types (Wall, Road, Endpoint). The state of each cell is stochastically updated depending on the state of each cell and the four-surrounding cells. </p>
     </div>
 
     <dt-byline></dt-byline>
@@ -187,18 +186,18 @@
     <!--p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p-->
 
     <p>Swarm intelligence is a system in which each of its components only has a simple function and these components interact only with their surroundings to produce complex results that are unimaginable from their individual functions.
-    For example, in the study of mouldy computers<dt-cite key="tero2010rules"></dt-cite>, they found that slime mold solves the shortest path problem. When we place slime in the maze and feed on endpoints of the maze, only slime mold on the shortest path remains. Although each slime mold cell is not intelligent enough to calculate the shortest path, slime mold emergently solves shortest path problem through the interaction between the cells and the environment.
+    For example, in the study of mouldy computers<dt-cite key="tero2010rules"></dt-cite>, they found that slime mold solves the shortest path problem. When we place slime in the maze and feed on endpoints of the maze, only slime mold on the shortest path remains. Although each slime mold cell is not intelligent enough to calculate the shortest path, slime mold emergently solves the shortest path problem through the interaction between the cells and the environment.
     Like this example, agents with simple functions have emergent functions as a group through interaction.
-    So we can consider to create artificial swarm intelligence to solve other problems. Boid<dt-cite key="reynolds1987flocks"></dt-cite> is famous for the first artificial swarm intelligence to simulate a flock of birds. Emergent results are observed that cannot be discovered by only knowing how the agents interact with each other.  Therefore, it is a challenge to design the functionality of agents to achieve the desired result.</p>
+    So we can consider createing artificial swarm intelligence to solve other problems. Boid<dt-cite key="reynolds1987flocks"></dt-cite> is famous for the first artificial swarm intelligence to simulate a flock of birds. Emergent results are observed that cannot be discovered by only knowing how the agents interact with each other.  Therefore, it is a challenge to design the functionality of agents to achieve the desired result.</p>
 
     <p>Growing Neural Cellular Automata<dt-cite key="mordvintsev2020growing"></dt-cite> showed that cellular automata based on simple rules can self-organize a variety of desired complex structures. In this model, the next state of a cell is determined only from the state of the surrounding cells, and the same rules are used for all cells. Since the cell update rules are differentiable, the process of self-organization can be optimized by end-to-end learning. In the Self-classifying MNIST Digits article<dt-cite key="randazzo2020self-classifying"></dt-cite>, they showed that cellular automata are capable of recognizing numerical images. They assign each pixel as each cell on the grid and determine what numbers are written on the pixel as a whole. In this case, cells can only obtain information directly from neighboring pixels, so it is necessary to obtain information by recursive interactions between cells to get the overall picture. In other words, they showed that the model is possible to learn how to integrate information on a global scale based only on local interaction.</p>
 
     <p>These results are interesting from the point of view of how we should construct swarm intelligence from the results we want to obtain. Therefore, we are interested in what other tasks this differentiable cellular automaton can perform.
-    In this paper, we challenged the maze solver task, which the cells find the shortest path between two given points, like mouldy computer.</p>
+    In this paper, we challenged the maze solver task, in which the cells find the shortest path between two given points, like mouldy computer.</p>
 
     <h2> The maze solver task </h2>
-    <p>A maze is defined as a grid of squares, each of which has one of three states: wall, road, or endpoint. The endpoints are at most two points in the maze. With the maze as an input, we move from one end point to the other end point by one square (up, down, left, right), passing only the roads.
-    We define the shortest path as the path that passes through the maze with the minimum amount of movement, and call it the solution of the maze.
+    <p>A maze is defined as a grid of squares, each of which has one of three states: wall, road, or endpoint. The endpoints are at most two points in the maze. With the maze as an input, we move from one endpoint to the other endpoint by one square (up, down, left, right), passing only the roads.
+    We define the shortest path as the path that passes through the maze with the minimum amount of movement and call it the solution of the maze.
     In order for the Neural Cellular Automata to perform the task of solving a maze, we take the maze as input and output the solution of the maze. Each cell is responsible for each square in the maze and receives the state of the square as input.
     Then, through the interaction with neighboring cells, it determines whether its own cell is the shortest path or not.  In general, it is not possible to determine the shortest path only from the states of a cell itself and the surrounding cells, so this maze solver task requires the integration of global information.</p>
 
@@ -218,7 +217,7 @@
 
     <h2> Maze Dataset </h2>
 
-    <p>For the maze solver task, we first prepare pairs of maze input and its solution  for training dataset. In this study, we created a random maze by the method called "wall-stretching method", and maze post-processing were applied to make more diverse maze. The method stretch the walls of a maze without creating a dividing path. Since the maze created by this method does not have any path fragmentation or loops, we generate randomly located walls and roads as a post-processing in order to create more diversity in the maze dataset. The following movies shows the process of creating mazes. </p>
+    <p>For the maze solver task, we first prepare pairs of maze input and its solution for the training dataset. In this study, we created a random maze by the method called "wall-stretching method", and maze post-processing was applied to make more diverse mazes. The method stretches the walls of a maze without creating a dividing path. Since the maze created by this method does not have any path fragmentation or loops, we generate randomly located walls and roads as post-processing to create more diversity in the maze dataset. The following movies show the process of creating mazes. </p>
 
     <div class="l-middle" style="display: flex; justify-content: space-between;">
       <video src="movie_genmaze/img0.mp4" autoplay muted loop style="display: inline-block; width:20%;" ></video>
@@ -246,7 +245,7 @@
       <p>(Left) Generated maze as input. (Right) The solution of the left maze. </p></div>
     </div>
 
-    <p>After generating maze, we set two endpoint on the maze and solve the maze as output. We use scipy csgraph library to create shortest path solution of the mazes. If there are multiple shortest paths, we prioritize to go through the lower part of the maze as possible to ensure the deterministic behavior of a maze solution. If there is no shortest path connecting two end points, then only the end points are defined as the roads on the shortest path. This movie shows final result of the maze dataset. </p>
+    <p>After generating mazes, we set two endpoints on the maze and solve the maze as output. We use scipy csgraph library to create the shortest path solution of the mazes. If there are multiple shortest paths, we prioritize to go through the lower part of the maze as possible to ensure the deterministic behavior of a maze solution. If there is no shortest path connecting two endpoints, then only the endpoints are defined as the roads on the shortest path. This movie shows the final result of the maze dataset. </p>
 
     <h2> Model </h2>
 
@@ -261,12 +260,12 @@
 
 
     <h3>Cell State</h3>
-    <p>The model used in this article is a simplified version of the model used in Growing Neural Cellular Automata. Each cell consists of 16 real channels. The first of the 16 channels is used to input the state of the maze.  The wall is +1, the road is 0, and the end point is -1.
+    <p>The model used in this article is a simplified version of the model used in Growing Neural Cellular Automata. Each cell consists of 16 real channels. The first of the 16 channels is used to input the state of the maze.  The wall is +1, the road is 0, and the endpoint is -1.
     The second channel is used to output the solution of the maze. The road on the shortest path is +1 and the other roads are -1, as a target value.
     The other 14 channels are used as hidden variables.</p>
 
     <h3>Cell Update</h3>
-    <p>The update of a cell is determined solely from the cell itself and from the state of its top, bottom, left and right cells. Specifically, we flatten the state of each cell (80 channels), take it as input and pass it through a 3-layer fully connected neural network to obtain the differential updates for 16 channels of cells and add them to the current state. The dimension of the hidden layer of the neural network is 64. Thus the number of parameters of the neural network is about 6.2k.
+    <p>The update of a cell is determined solely from the cell itself and from the state of its top, bottom, left, and right cells. Specifically, we flatten the state of each cell (80 channels), take it as input, and pass it through a 3-layer fully connected neural network to obtain the differential updates for 16 channels of cells and add them to the current state. The dimension of the hidden layer of the neural network is 64. Thus the number of parameters of the neural network is about 6.2k.
     In order to include probabilistic behavior in the cell, the cell is updated with a half probability. Living cell masking in the context of Growing Neural Cellular Automata is not used.</p>
 
     <h2> Experiment 1: state evolution and accuracy </h2>
@@ -279,9 +278,9 @@
     </div>
 
     <h3> Training procedure </h3>
-    <p>We use our Neural Cellular Automata to learn how to solve mazes. We train the model with end-to-end learning by predicting the evolution of the model state over tens of update steps from the initial state and calculating the mean square error loss between the maze output (second channel) and the target label (maze solution). Randomly sampled "maze" and "solution of the maze" from the previously prepared Maze Dataset are assigned to the model's maze input and target label, respectively. To avoid the influence of the update to the maze input, we filled the maze data to the maze input  every step. Also, the mean square error between the maze output and the target label was added to the loss function every step. In this every step loss adding, we expect the output to be correct as quickly and permanently as possible.
+    <p>We use our Neural Cellular Automata to learn how to solve mazes. We train the model with end-to-end learning by predicting the evolution of the model state over tens of update steps from the initial state and calculating the mean square error loss between the maze output (second channel) and the target label (maze solution). Randomly sampled "maze" and "solution of the maze" from the previously prepared Maze Dataset are assigned to the model's maze input and target label, respectively. To avoid the influence of the update to the maze input, we filled the maze data to the maze input every step. Also, the mean square error between the maze output and the target label was added to the loss function every step. In this every step loss adding, we expect the output to be correct as quickly and permanently as possible.
     Assuming that the maze input is suddenly changed, we copy the state of the last step of the previous mini-batch to the initial state of all channels except the maze input (first channel) of the current mini-batch.
-    This state copy techniques also has similar effect to the sample pool based strategy described in Growing Neural Cellular Automata.
+    This state copy techniques also has a similar effect to the sample pool based strategy described in Growing Neural Cellular Automata.
     For the same reason, in one mini-batch, the number of steps to predict is chosen from a uniform random number of steps between 1 and 128. In this way, we expect that the maze input is correctly predicted regardless of the change in the maze input at any time.</p>
 
     <h3> Results </h3>
@@ -298,10 +297,10 @@
     <p>This is a video of our Neural Cellular Automata solving a maze.
     Each square on the grid represents a maze input (the first channel) and has a wall or a path or an endpoint. Above the squares layer, we put the value of the maze output (the second channel) as the size of the radius of each circle. The roads are expected to be on the shortest path when the radius of the circle is maximum, and not on the shortest path when the radius of the circle is zero. Therefore, we can consider the size of the circle as an indicator of the confidence of the roads to be on the shortest path or not.
 
-    When we observe the development from the zero-filled initial state as the above movies, we can see that small maze outputs (small radius circles) appear everywhere on the roads in the early stage, and gradually the output of the maze on the roads not on the shortest path becomes smaller and the output of the maze on the roads on the shortest path becomes larger. The reason why a small maze output appears in the early stages is because we take the mean square loss between the solution of the maze and the output of the maze at every step during the training, so that the loss function would be smaller if the maze output take an intermediate value when the shortest path is not known. The maze output becomes larger when the cell found that the its own raod is on the shortest path through cell-to-cell interactions, and vice versa.</p>
+    When we observe the development from the zero-filled initial state as the above movies, we can see that small maze outputs (small radius circles) appear everywhere on the roads in the early stage, and gradually the output of the maze on the roads not on the shortest path becomes smaller and the output of the maze on the roads on the shortest path becomes larger. The reason why a small maze output appears in the early stages is that we take the mean square loss between the solution of the maze and the output of the maze at every step during the training so that the loss function would be smaller if the maze output take an intermediate value when the shortest path is not known. The maze output becomes larger when the cell found that its own road is on the shortest path through cell-to-cell interactions and vice versa.</p>
 
-    <p>The following figure shows how the accuracy of the maze changes as the state evolves using test maze dataset.
-    The accuracy evaluation was performed as follows. First, a test set containing 1000 mazes was created separately from the training dataset. These all maze data are used as the initial state to evolve the state. The initial states are filled with zeros. We define "correct prediction" as the case where the placement of the cells whose maze output is greater than zero and the placement of the correct solution of the maze match exactly, and define other cases as "wrong prediction". We then define accuracy as the percentage of cases where the correct prediction is made out of all the prediction results.
+    <p>The following figure shows how the accuracy of the maze changes as the state evolves using the test maze dataset.
+    The accuracy evaluation was performed as follows. First, a test set containing 1000 mazes was created separately from the training dataset. These maze data are used as the initial state to evolve the state. The initial states are filled with zeros. We define "correct prediction" as the case where the placement of the cells whose maze output is greater than zero and the placement of the correct solution of the maze match exactly, and define other cases as "wrong prediction". We then define accuracy as the percentage of cases where the correct prediction is made out of all the prediction results.
     From this figure, we can see that the maze is almost completely solved in about 100 steps. The accuracy is stable after 100 steps and is correct in more than 99% of cases. Our model avoids any broken of the maze output even in a large number of steps according to the state copy techniques. At less than 100 steps, the accuracy increases in proportion to the number of steps.</p>
 
     <div class="l-body" style="display: flex; align-items: center; justify-content: center;">
@@ -330,7 +329,7 @@
 
     <h3> Hysteresis effect on maze change </h3>
 
-    <p>Depending on the way of changing the maze input, the last step state before the change may influence the suceeding states and the wrong path may be selected as the maze output after the change. We call this effect as hysteresis effect, and the following movie shows a example of it. The left side of the movie has end points at the top and bottom, and there are two paths connecting the end points on the left and right. Since the left route is 25 squares away and the right route is 21 squares away, so the route on the right side is the shortest distance and our model actually chose it correctly.
+    <p>Depending on the way of changing the maze input, the last step state before the change may influence the succeeding states and the wrong path may be selected as the maze output after the change. We call this effect as a hysteresis effect, and the following movie shows an example of it. The left side of the movie has endpoints at the top and bottom, and two paths connecting the endpoints on the left and right. Since the left route is 25 squares away and the right route is 21 squares away, so the route on the right side is the shortest distance and our model chose it correctly.
     Next, on the right side of the movie, we changed a little bit from the initial condition of the left movie to have a route of 17 squares on the left side and 21 squares on the right side in the initial condition. And our model correctly selects the left side. After the state is stabilized, we make a little modification to match the maze input on the left side of the movie. Since this operation yields 25 squares for the left route, the right route should be selected as the solution of the maze. However, depending on the previous state (hysteresis), the left route is selected as a result.</p>
 
     <div class="l-middle" style="display: flex; justify-content: space-around;">
